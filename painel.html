@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel de Operações</title>
+</head>
+<body>
+    <h2>Painel</h2>
+    <p>Usuário logado: {{ user['username'] }}</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <h3>Sugestão de AI (demo)</h3>
+    <p>Ação sugerida: {{ sugestao['acao'] }}</p>
+    <p>Preço referência: {{ sugestao['preco_referencia'] }}</p>
+    <p>Quantidade sugerida: {{ sugestao['quantidade'] }}</p>
+    <form method="post" action="{{ url_for('manual_ops.executar') }}">
+        <input type="hidden" name="tipo" value="compra">
+        <input type="hidden" name="valor" value="0.001">
+        <button type="submit">Simular Compra</button>
+    </form>
+    <form method="post" action="{{ url_for('manual_ops.executar') }}">
+        <input type="hidden" name="tipo" value="venda">
+        <input type="hidden" name="valor" value="0.001">
+        <button type="submit">Simular Venda</button>
+    </form>
+    <form method="get" action="{{ url_for('auto_ops.ativar_auto') }}">
+        <button type="submit">Ativar Modo Automático (demo)</button>
+    </form>
+    <h3>Histórico de operações simuladas</h3>
+    <ul>
+    {% for ordem in historico %}
+        <li>{{ ordem['usuario'] }} executou {{ ordem['tipo'] }} de {{ ordem['valor'] }}</li>
+    {% endfor %}
+    </ul>
+    <p><a href="{{ url_for('usuarios.logout') }}">Logout</a></p>
+</body>
+</html>
